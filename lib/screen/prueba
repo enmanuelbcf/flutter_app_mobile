@@ -1,0 +1,206 @@
+import 'package:app_schedule/models/SubjectProvider.dart';
+import 'package:app_schedule/widgets/TextfliedCustom%20copy.dart';
+import 'package:app_schedule/widgets/TextfliedCustom.dart';
+import 'package:app_schedule/widgets/Utlis.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+
+class PageAddSubject extends StatelessWidget {
+  const PageAddSubject({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final subject = context.read<Subjectprovider>();
+    final id = ModalRoute.of(context)?.settings.arguments as int;
+    // final _ControllerSubject = TextEditingController();
+    // final _ControllerDay = TextEditingController();
+    // final _ControllerHe = TextEditingController();
+    // final _ControllerHs = TextEditingController();
+    // final _ControllerModalida = TextEditingController();
+    // final _ControllerAula = TextEditingController();
+    // final _controllerDrop = TextEditingController();
+    final _formKey = GlobalKey<FormState>();
+
+    List<Map<String, int>> ListaSelect = [
+      {'Lunes': 1},
+      {'Martes': 2},
+      {'Miercoles': 3},
+      {'Jueves': 4},
+      {'Viernes': 5},
+      {'Sabado': 6},
+      {'Domingo': 7}
+    ];
+
+    List<Map<String, int>> ListaSelectModalidad = [
+      {'Presencial': 1},
+      {'Virtual': 2},
+    ];
+
+    // String? _valorSeleccionado =
+    //     ListaSelect.first.values.toString().substring(1, 2);
+
+    // String _valorSeleccionadoModalidad =
+    //     ListaSelectModalidad.first.values.toString().substring(1, 2);
+
+    final MaskTextInputFormatter timeMaskFormatter =
+        MaskTextInputFormatter(mask: '##:##', filter: {"#": RegExp(r'[0-9]')});
+
+    // _controllerDrop.text = ListaSelect.first.keys.toString().substring(1, 6);
+    // _ControllerModalida.text =
+    //     ListaSelectModalidad.first.keys.toString().substring(1, 11);
+    // void clearForm() {
+    //   _ControllerSubject.clear();
+    //   _ControllerDay.clear();
+    //   _ControllerHe.clear();
+    //   _ControllerHs.clear();
+    //   _ControllerModalida.clear();
+    //   _ControllerAula.clear();
+    // }
+
+    return Scaffold(
+      appBar: Menu(),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Text('AGERGAR ASIGNATURAS',
+                      style: GoogleFonts.poppins(
+                          fontSize: 26, fontWeight: FontWeight.bold))
+                ],
+              ),
+            ),
+            Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    TextFiledCustom(
+                        hintText: 'Nombre asignatura',
+                        // controller: '',
+                        validator: (value) {
+                          if (value == '' || value!.trim().isEmpty) {
+                            return 'El campo es requerido';
+                          }
+                          return null;
+                        }),
+                    // TextFiledCustom(
+                    //   hintText: 'Día',
+                    //   controller: _ControllerDay,
+                    //   validator: (value) {
+                    //     if (value == '' || value!.trim().isEmpty) {
+                    //       return 'El campo es requerido';
+                    //     }
+                    //     return null;
+                    //   },
+                    // ),
+                    // Padding(
+                    //   padding: EdgeInsets.symmetric(vertical: 16),
+                    //   child: DropdownMenu(
+                    //       width: MediaQuery.of(context).size.width * 0.95,
+                    //       inputDecorationTheme: InputDecorationTheme(
+                    //           border: OutlineInputBorder(
+                    //         borderRadius: BorderRadius.circular(30.0),
+                    //         borderSide: const BorderSide(
+                    //             color: Colors.black, width: 1.0),
+                    //       )),
+                    //       onSelected: (value) {
+                    //         print(value);
+                    //         // _valorSeleccionado =
+                    //         //     value.toString().substring(1, 2);
+                    //       },
+                    //       controller: _controllerDrop,
+                    //       dropdownMenuEntries: ListaSelect.map((value) {
+                    //         return DropdownMenuEntry(
+                    //             value: value.values, label: value.keys.first);
+                    //       }).toList()),
+                    // ),
+                    TextFiledCustom(
+                      hintText: 'Hora Entrada',
+                      // controller: _ControllerHe,
+                      inputFormatters: [timeMaskFormatter],
+                      keyboardType: TextInputType.datetime,
+                      validator: (value) {
+                        if (value == '' || value!.trim().isEmpty) {
+                          return 'El campo es requerido';
+                        }
+                        return null;
+                      },
+                    ),
+                    TextFiledCustom(
+                      hintText: 'Hora Salida',
+                      // controller: _ControllerHs,
+                      inputFormatters: [timeMaskFormatter],
+                      keyboardType: TextInputType.datetime,
+                      validator: (value) {
+                        if (value == '' || value!.trim().isEmpty) {
+                          return 'El campo es requerido';
+                        }
+                        return null;
+                      },
+                    ),
+                    select(ListaSelectModalidad: ListaSelectModalidad),
+                    TextFiledCustom(
+                      hintText: 'Aula',
+                      // controller: _ControllerAula,
+                    ),
+                  ],
+                )),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.save),
+        onPressed: () {
+          // if (_formKey.currentState!.validate() == true) {
+            subject.addSucject(
+                name: _ControllerSubject.text,
+                day: '',
+                he: _ControllerHe.text,
+                hs: _ControllerHs.text,
+                modalidad: '',
+                aula: _ControllerAula.text != '' ? _ControllerAula.text : null,
+                id: id);
+
+            // clearForm();
+          }
+        },
+      ),
+    );
+  }
+}
+
+class select extends StatelessWidget {
+  const select({
+    super.key,
+    required this.ListaSelectModalidad,
+  });
+
+  final List<Map<String, int>> ListaSelectModalidad;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 16),
+      child: DropdownMenu(
+          width: MediaQuery.of(context).size.width * 0.95,
+          inputDecorationTheme: InputDecorationTheme(
+              border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30.0),
+            borderSide: const BorderSide(color: Colors.black, width: 1.0),
+          )),
+          onSelected: (value) {
+            // _valorSeleccionadoModalidad =
+            //     value.toString().substring(1, 2);
+          },
+          // controller: _ControllerModalida,
+          dropdownMenuEntries: ListaSelectModalidad.map((value) {
+            return DropdownMenuEntry(
+                value: value.values, label: value.keys.first);
+          }).toList()),
+    );
+  }
+}
