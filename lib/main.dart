@@ -65,8 +65,9 @@ class MyApp extends StatelessWidget {
                           children: [
                             const SizedBox(
                               height: 20,
+                              
                             ),
-                            Text('EMELY YANIL DÍAZ DEL CARMEN',
+                            Text('EMELY YANIL DÍAZ',
                                 style: GoogleFonts.poppins(
                                     fontWeight: FontWeight.w400, fontSize: 13)),
                             Expanded(
